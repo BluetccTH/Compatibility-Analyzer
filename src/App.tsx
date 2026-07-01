@@ -10,6 +10,8 @@ import { cuteSynth } from "./utils/audio";
 // Import the beautifully generated cozy rain comfort illustration
 // @ts-ignore
 import cozyRainComfort from "./assets/images/cozy_rain_comfort_1782860616211.jpg";
+// @ts-ignore
+import forestBackground from "./assets/images/forest_background_1782873248749.jpg";
 
 interface RaindropData {
   id: number;
