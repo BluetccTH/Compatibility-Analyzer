@@ -91,6 +91,14 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-950 font-sans text-slate-100 relative overflow-x-hidden selection:bg-sky-500/30 selection:text-sky-200">
       
+      {/* Deep Forest Atmospheric Background 🌲🌌 */}
+      <div 
+        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-30 pointer-events-none"
+        style={{ backgroundImage: `url(${forestBackground})` }}
+      />
+      
+      {/* Dark tint and gradient overlay to ensure extremely clean readability */}
+      <div className="fixed inset-0 z-0 bg-gradient-to-b from-slate-950/80 via-slate-950/50 to-slate-950/90 pointer-events-none" />
       {/* Background Falling Rain Drops */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         {raindrops.map((drop) => (
@@ -206,7 +214,7 @@ export default function App() {
             transition={{ delay: 0.2 }}
             className="text-slate-300 text-sm md:text-base leading-relaxed max-w-xl mx-auto"
           >
-            ยินดีต้อนรับสู่แดนสวรรค์สีฟ้าพาสเทลแสนน่ารักที่ก้าวตั้งใจเตรียมไว้ให้ไอซ์โดยเฉพาะ 🌧️✨ <br className="hidden sm:inline" />
+            ยินดีต้อนรับสู่แดนสวรรค์สีฟ้าพาสเทลแสนน่ารักที่ก้าวตั้งใจเตรียมไว้ให้พี่ไอซ์โดยเฉพาะ 🌧️✨ <br className="hidden sm:inline" />
             ก้าวพร้อมสัญญากลายเป็นบ้านปกคลุมจากเสียงฟ้าร้องที่ดังพาดฟ้า และปกป้องเธอจนถึงเช้าวันใหม่
           </motion.p>
         </div>
@@ -265,7 +273,7 @@ export default function App() {
                 <div className="space-y-1">
                   <h4 className="font-bold text-white text-xs sm:text-sm">ขั้วตรงข้ามที่ก้าวพร้อมปกป้อง</h4>
                   <p className="text-xs text-sky-200 leading-relaxed">
-                    ก้าวพร้อมเป็นเกราะบังลมพายุเมื่อฟ้าคะนอง! โดยให้ไอซ์นอนสบายใจพร้อมกับความสดใส คุยเล่น และแมววิเชียรมาศแสนน่ารัก 🐱💙
+                    ก้าวพร้อมเป็นเกราะบังลมพายุเมื่อฟ้าคะนอง! โดยให้พี่ไอซ์นอนสบายใจพร้อมกับความสดใส คุยเล่น และแมววิเชียรมาศแสนน่ารัก 🐱💙
                   </p>
                 </div>
               </div>
