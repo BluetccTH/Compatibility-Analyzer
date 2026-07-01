@@ -299,7 +299,7 @@ export default function App() {
 
         {/* Footer info line */}
         <footer className="text-center text-[11px] text-slate-500 font-sans pt-8 border-t border-slate-900">
-          <p>© 2026 ก้าว 🔭 ❤️ ไอซ์ 🧊. พัฒนาด้วยความตั้งใจเพื่อความสุขของเธอในทุกพายุฝน</p>
+          <p>© 2026 Kao 🔭 ❤️ Ice 🧊. พัฒนาด้วยความตั้งใจเพื่อความสุขของเธอในทุกพายุฝน</p>
           <p className="mt-1">เคียงข้างดูแลกันตลอดไป 🌧️✨</p>
         </footer>
       </div>
