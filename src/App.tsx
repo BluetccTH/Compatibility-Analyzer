@@ -10,8 +10,10 @@ import { cuteSynth } from "./utils/audio";
 // Import the beautifully generated cozy rain comfort illustration
 // @ts-ignore
 import cozyRainComfort from "./assets/images/cozy_rain_comfort_1782860616211.jpg";
-// @ts-ignore
-import forestBackground from "./assets/images/forest_background_1782873248749.jpg";
+
+// Using a gorgeous, misty, dark blue atmospheric pine forest from Unsplash
+// This ensures that GitHub Actions builds successfully without requiring the local generated asset to be committed first!
+const forestBackground = "https://images.unsplash.com/photo-1511497584788-876760111969?q=80&w=2070&auto=format&fit=crop";
 
 interface RaindropData {
   id: number;
