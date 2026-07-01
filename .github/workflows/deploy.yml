@@ -24,11 +24,47 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
+      # Validate GitHub Secrets to give a helpful error message instead of failing obscurely
+      - name: Validate GCP Secrets Configuration
+        run: |
+          if [ -z "${{ secrets.GCP_PROJECT_ID }}" ]; then
+            echo "================================================================"
+            echo "❌ ERROR: GCP_PROJECT_ID is not configured in GitHub Secrets!"
+            echo "================================================================"
+            echo "To fix this, please follow these steps:"
+            echo "1. Go to your GitHub repository: Settings -> Secrets and variables -> Actions"
+            echo "2. Click 'New repository secret'"
+            echo "3. Name: GCP_PROJECT_ID"
+            echo "4. Value: <your-google-cloud-project-id>"
+            echo "================================================================"
+            exit 1
+          fi
+
+          if [ -z "${{ secrets.GCP_SA_KEY }}" ] && [ -z "${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}" ]; then
+            echo "================================================================"
+            echo "❌ ERROR: Google Cloud authentication credentials are missing!"
+            echo "================================================================"
+            echo "Please configure either a Service Account Key (recommended for simplicity) or Workload Identity Federation:"
+            echo ""
+            echo "🔹 Option A: Service Account Key (Simplest)"
+            echo "  1. Go to your GitHub repository: Settings -> Secrets and variables -> Actions"
+            echo "  2. Click 'New repository secret'"
+            echo "  3. Name: GCP_SA_KEY"
+            echo "  4. Value: <Paste the entire content of your JSON service account key file>"
+            echo ""
+            echo "🔹 Option B: Workload Identity Federation"
+            echo "  1. Configure GCP Workload Identity Federation for GitHub Actions"
+            echo "  2. Add 'GCP_WORKLOAD_IDENTITY_PROVIDER' and 'GCP_SA_EMAIL' as repository secrets"
+            echo "================================================================"
+            exit 1
+          fi
+
       # 1. Authenticate with Google Cloud
       # Supports both Workload Identity Federation (recommended) and Service Account Keys.
       # Configure either GCP_SA_KEY or GCP_WORKLOAD_IDENTITY_PROVIDER in GitHub Secrets.
       - name: Google Cloud Authentication
         id: auth
+        if: ${{ secrets.GCP_SA_KEY != '' || secrets.GCP_WORKLOAD_IDENTITY_PROVIDER != '' }}
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
