@@ -90,8 +90,10 @@ export default function ProfileComparison() {
         <h2 className="text-2xl md:text-3xl font-extrabold text-white">
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-cyan-200 to-sky-400">
             คู่มือหัวใจสองเรา: ก้าว & ไอซ์
+            
           </span>{" "}
           🌌🧊
+          
         </h2>
         <p className="text-slate-300 text-sm max-w-xl mx-auto">
           เพื่อทำให้ไอซ์รู้สึกดีที่สุด เรามาดูจุดเชื่อมโยงของหนุ่มปทุมธานีผู้เงียบขรึมรักดาราศาสตร์ กับสาวอุบลผู้ใจดีที่มีจินตนาการล้นเหลือกันค่ะ
