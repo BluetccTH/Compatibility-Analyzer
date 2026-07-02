@@ -5,7 +5,6 @@ import ChemistryCard from "./components/ChemistryCard";
 import AiOracle from "./components/AiOracle";
 import ProposalPanel from "./components/ProposalPanel";
 import ProfileComparison from "./components/ProfileComparison";
-import PasscodeGate from "./components/PasscodeGate";
 import { cuteSynth } from "./utils/audio";
 
 // Import the beautifully generated cozy rain comfort illustration
@@ -32,9 +31,6 @@ interface StarData {
 }
 
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return sessionStorage.getItem("is_ice_authenticated") === "true";
-  });
   const [raindrops, setRaindrops] = useState<RaindropData[]>([]);
   const [stars, setStars] = useState<StarData[]>([]);
   const [activeView, setActiveView] = useState<"analysis" | "ai" | "proposal">("analysis");
@@ -93,17 +89,6 @@ export default function App() {
       cuteSynth.start();
     }
   };
-
-  if (!isAuthenticated) {
-    return (
-      <PasscodeGate
-        onSuccess={() => {
-          setIsAuthenticated(true);
-          sessionStorage.setItem("is_ice_authenticated", "true");
-        }}
-      />
-    );
-  }
 
   return (
     <div className="min-h-screen bg-slate-950 font-sans text-slate-100 relative overflow-x-hidden selection:bg-sky-500/30 selection:text-sky-200">
