@@ -5,6 +5,7 @@ import ChemistryCard from "./components/ChemistryCard";
 import AiOracle from "./components/AiOracle";
 import ProposalPanel from "./components/ProposalPanel";
 import ProfileComparison from "./components/ProfileComparison";
+import PasscodeGate from "./components/PasscodeGate";
 import { cuteSynth } from "./utils/audio";
 
 // Import the beautifully generated cozy rain comfort illustration
