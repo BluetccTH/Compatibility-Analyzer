@@ -751,7 +751,7 @@ export default function ProposalPanel({ imageUrl }: { imageUrl: string }) {
 
               {/* The Glowing Neon Teleport Button */}
               <motion.a
-                href="https://stars.chromeexperiments.com/"
+                href="https://bluetccth.github.io/ICE-KAO-ORBIT/"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
