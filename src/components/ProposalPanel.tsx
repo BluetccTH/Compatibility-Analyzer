@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Heart, Sparkles, Shield, ExternalLink, Compass } from "lucide-react";
+import { Heart, Sparkles, Shield, ExternalLink, Compass, ShieldCheck, Lock, AlertCircle, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
 // Plays a gorgeous, starry celestial bell chime & warm synth pad using Web Audio API
@@ -348,9 +348,41 @@ function triggerRomanticExplosion(canvas: HTMLCanvasElement) {
 
 export default function ProposalPanel({ imageUrl }: { imageUrl: string }) {
   const [accepted, setAccepted] = useState(false);
+  const [showVerification, setShowVerification] = useState(false);
+  const [verificationAnswer, setVerificationAnswer] = useState("");
+  const [verificationError, setVerificationError] = useState(false);
   const [noButtonPosition, setNoButtonPosition] = useState({ x: 0, y: 0 });
   const [noHoverCount, setNoHoverCount] = useState(0);
   const [noClickedMsg, setNoClickedMsg] = useState("");
+
+  const handleVerifySubmit = () => {
+    const cleanedAnswer = verificationAnswer.trim().replace(/\s+/g, ' ').toUpperCase();
+    if (cleanedAnswer === "NAMA CHOCOLATE AU LAIT") {
+      setAccepted(true);
+    } else {
+      setVerificationError(true);
+      try {
+        const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+        if (AudioCtx) {
+          const ctx = new AudioCtx();
+          const now = ctx.currentTime;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(140, now);
+          osc.frequency.exponentialRampToValueAtTime(80, now + 0.25);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.25);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.25);
+        }
+      } catch (err) {
+        console.error("Audio failed:", err);
+      }
+    }
+  };
   const containerRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -408,89 +440,187 @@ export default function ProposalPanel({ imageUrl }: { imageUrl: string }) {
     >
       <AnimatePresence mode="wait">
         {!accepted ? (
-          <motion.div
-            key="ask"
-            ref={panelRef}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="w-full max-w-xl text-center space-y-6 sm:space-y-8 py-4 relative z-10"
-          >
-            {/* Pulsating heart decoration */}
-            <div className="relative inline-flex items-center justify-center">
-              <span className="absolute animate-ping w-10 h-10 sm:w-12 sm:h-12 bg-pink-500/20 rounded-full inline-flex"></span>
-              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-pink-500/20 text-pink-500 border border-pink-500/30 rounded-full flex items-center justify-center relative shadow-lg shadow-pink-500/10">
-                <Heart className="w-6 h-6 sm:w-8 sm:h-8 fill-current animate-pulse" />
+          !showVerification ? (
+            <motion.div
+              key="ask"
+              ref={panelRef}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="w-full max-w-xl text-center space-y-6 sm:space-y-8 py-4 relative z-10"
+            >
+              {/* Pulsating heart decoration */}
+              <div className="relative inline-flex items-center justify-center">
+                <span className="absolute animate-ping w-10 h-10 sm:w-12 sm:h-12 bg-pink-500/20 rounded-full inline-flex"></span>
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-pink-500/20 text-pink-500 border border-pink-500/30 rounded-full flex items-center justify-center relative shadow-lg shadow-pink-500/10">
+                  <Heart className="w-6 h-6 sm:w-8 sm:h-8 fill-current animate-pulse" />
+                </div>
               </div>
-            </div>
 
-            <div className="space-y-2.5 sm:space-y-3 px-1 sm:px-0">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white leading-tight font-sans">
-                จะยอมให้ผู้ชายคนนี้ คอยกางร่มอุ่นๆ <br className="hidden sm:inline" />
-                และคอยกอดปกป้องไอซ์ไปตลอดทุกพายุฝนเลยไหมคะ? 🌧️💖
-              </h2>
-              <p className="text-slate-300 text-xs sm:text-sm md:text-base max-w-md mx-auto leading-relaxed">
-                ในยามพายุฟ้าคะนองส่องเสียงดัง และความมืดมิดกวักมือเรียกผีร้าย... <br className="hidden sm:inline" />
-                เธอจะไม่ต้องเผชิญหน้าคนเดียวอีกต่อไป ยอมให้ร่มคันนี้เป็นพื้นที่ปลอดภัยของเธอนะ
-              </p>
-            </div>
+              <div className="space-y-2.5 sm:space-y-3 px-1 sm:px-0">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white leading-tight font-sans">
+                  จะยอมให้ผู้ชายคนนี้ คอยกางร่มอุ่นๆ <br className="hidden sm:inline" />
+                  และคอยกอดปกป้องไอซ์ไปตลอดทุกพายุฝนเลยไหมคะ? 🌧️💖
+                </h2>
+                <p className="text-slate-300 text-xs sm:text-sm md:text-base max-w-md mx-auto leading-relaxed">
+                  ในยามพายุฟ้าคะนองส่องเสียงดัง และความมืดมิดกวักมือเรียกผีร้าย... <br className="hidden sm:inline" />
+                  เธอจะไม่ต้องเผชิญหน้าคนเดียวอีกต่อไป ยอมให้ร่มคันนี้เป็นพื้นที่ปลอดภัยของเธอนะ
+                </p>
+              </div>
 
-            {/* Witty Message Display when NO clicked */}
-            <AnimatePresence>
-              {noClickedMsg && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  className="bg-pink-600/10 border border-pink-500/30 rounded-xl px-4 py-2 text-[11px] sm:text-xs text-pink-300 max-w-sm mx-auto"
+              {/* Witty Message Display when NO clicked */}
+              <AnimatePresence>
+                {noClickedMsg && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="bg-pink-600/10 border border-pink-500/30 rounded-xl px-4 py-2 text-[11px] sm:text-xs text-pink-300 max-w-sm mx-auto"
+                  >
+                    {noClickedMsg}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Button container */}
+              <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 min-h-[100px] pt-2 relative">
+                <button
+                  id="btn-proposal-yes"
+                  onClick={() => setShowVerification(true)}
+                  className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 rounded-2xl text-sm sm:text-base md:text-lg font-bold shadow-[0_0_35px_rgba(236,72,153,0.4)] border border-pink-400/50 scale-105 sm:scale-110 active:scale-95 hover:scale-115 transition-all duration-300 z-10 flex items-center gap-2 px-8 py-3.5 sm:px-12 sm:py-4.5 md:px-16 md:py-5 text-white cursor-pointer"
                 >
-                  {noClickedMsg}
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  <Heart className="w-5 h-5 fill-current animate-pulse" /> ยอมค่ะ / ตกลงนะคะ 💍
+                </button>
 
-            {/* Button container */}
-            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 min-h-[100px] pt-2 relative">
-              <button
-                id="btn-proposal-yes"
-                onClick={() => setAccepted(true)}
-                className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 rounded-2xl text-sm sm:text-base md:text-lg font-bold shadow-[0_0_35px_rgba(236,72,153,0.4)] border border-pink-400/50 scale-105 sm:scale-110 active:scale-95 hover:scale-115 transition-all duration-300 z-10 flex items-center gap-2 px-8 py-3.5 sm:px-12 sm:py-4.5 md:px-16 md:py-5 text-white cursor-pointer"
-              >
-                <Heart className="w-5 h-5 fill-current animate-pulse" /> ยอมค่ะ / ตกลงนะคะ 💍
-              </button>
+                {/* The elusive No button - inline initially */}
+                {noHoverCount === 0 && (
+                  <button
+                    id="btn-proposal-no"
+                    onMouseEnter={handleNoInteraction}
+                    onClick={handleNoInteraction}
+                    className="bg-slate-800 hover:bg-slate-700 text-slate-400 font-medium text-xs sm:text-sm px-5 py-2.5 sm:px-6 sm:py-3 rounded-full border border-slate-700 hover:border-slate-500 cursor-pointer"
+                  >
+                    ไม่ยอมหรอก 🥺
+                  </button>
+                )}
+              </div>
 
-              {/* The elusive No button - inline initially */}
-              {noHoverCount === 0 && (
+              {/* The absolute elusive No button floating around the entire card (when hover count > 0) */}
+              {noHoverCount > 0 && (
                 <button
                   id="btn-proposal-no"
                   onMouseEnter={handleNoInteraction}
                   onClick={handleNoInteraction}
-                  className="bg-slate-800 hover:bg-slate-700 text-slate-400 font-medium text-xs sm:text-sm px-5 py-2.5 sm:px-6 sm:py-3 rounded-full border border-slate-700 hover:border-slate-500 cursor-pointer"
+                  style={{
+                    position: "absolute",
+                    left: `${noButtonPosition.x}px`,
+                    top: `${noButtonPosition.y}px`,
+                    transition: "all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)", // highly playful springy bounce
+                    zIndex: 50,
+                  }}
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-400 font-medium text-xs sm:text-sm px-5 py-2.5 sm:px-6 sm:py-3 rounded-full border border-slate-700 hover:border-slate-500 cursor-pointer shadow-lg shadow-black/50"
                 >
                   ไม่ยอมหรอก 🥺
                 </button>
               )}
-            </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="verify"
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: -15 }}
+              transition={{ duration: 0.4 }}
+              className="w-full max-w-md text-center space-y-6 sm:space-y-7 py-6 relative z-10 bg-slate-950/40 backdrop-blur-md p-6 sm:p-8 rounded-3xl border border-pink-500/25 shadow-2xl flex flex-col items-center"
+            >
+              {/* Question Verification Screen */}
+              <div className="relative inline-flex items-center justify-center">
+                <span className="absolute animate-ping w-10 h-10 bg-pink-500/10 rounded-full inline-flex"></span>
+                <div className="w-14 h-14 bg-pink-500/20 text-pink-400 border border-pink-500/30 rounded-full flex items-center justify-center relative shadow-lg">
+                  <ShieldCheck className="w-7 h-7" />
+                </div>
+              </div>
 
-            {/* The absolute elusive No button floating around the entire card (when hover count > 0) */}
-            {noHoverCount > 0 && (
-              <button
-                id="btn-proposal-no"
-                onMouseEnter={handleNoInteraction}
-                onClick={handleNoInteraction}
-                style={{
-                  position: "absolute",
-                  left: `${noButtonPosition.x}px`,
-                  top: `${noButtonPosition.y}px`,
-                  transition: "all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)", // highly playful springy bounce
-                  zIndex: 50,
-                }}
-                className="bg-slate-800 hover:bg-slate-700 text-slate-400 font-medium text-xs sm:text-sm px-5 py-2.5 sm:px-6 sm:py-3 rounded-full border border-slate-700 hover:border-slate-500 cursor-pointer shadow-lg shadow-black/50"
-              >
-                ไม่ยอมหรอก 🥺
-              </button>
-            )}
-          </motion.div>
+              <div className="space-y-2">
+                <h3 className="text-lg sm:text-xl font-extrabold text-white">
+                  ระบบตรวจสอบยืนยันตัวตน 🔒💖
+                </h3>
+                <p className="text-xs text-slate-300 max-w-xs">
+                  โปรดตอบคำถามเพื่อยืนยันว่าคือพี่ไอซ์สุดที่รักของก้าวตัวจริงเสียงจริง!
+                </p>
+              </div>
+
+              <div className="w-full space-y-4 text-left">
+                <div className="bg-slate-900/80 p-4 rounded-2xl border border-pink-500/10 space-y-1.5">
+                  <span className="text-[10px] text-pink-400 font-extrabold uppercase tracking-widest block">
+                    คำถามลับ (Secret Question)
+                  </span>
+                  <p className="text-sm sm:text-base font-bold text-slate-100 leading-relaxed">
+                    ก้าวชอบกินช็อกโกแลตอะไร? 🍫✨
+                  </p>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider px-1">
+                    คำตอบของคุณ (ตัวสะกดภาษาอังกฤษ)
+                  </label>
+                  <input
+                    type="text"
+                    value={verificationAnswer}
+                    onChange={(e) => {
+                      setVerificationAnswer(e.target.value);
+                      if (verificationError) setVerificationError(false);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleVerifySubmit();
+                      }
+                    }}
+                    placeholder="พิมพ์คำตอบภาษาอังกฤษตรงนี้..."
+                    className={`w-full bg-slate-950 border rounded-xl px-4 py-3.5 text-sm font-bold text-slate-100 tracking-wide transition-all focus:outline-none focus:ring-1 ${
+                      verificationError
+                        ? "border-rose-500/50 focus:border-rose-500 focus:ring-rose-500/50 shadow-[0_0_15px_rgba(239,68,68,0.2)]"
+                        : "border-slate-800 focus:border-pink-500/50 focus:ring-pink-500/50 shadow-[0_0_15px_rgba(236,72,153,0.1)]"
+                    }`}
+                  />
+                </div>
+              </div>
+
+              {verificationError && (
+                <motion.div
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-[11px] text-rose-300 font-bold bg-rose-950/30 border border-rose-500/20 px-3 py-2.5 rounded-xl text-left w-full flex items-start gap-2 leading-relaxed"
+                >
+                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-400" />
+                  <span>เอ๊ะ... ตอบไม่ถูกน้าา ใช่พี่ไอซ์ตัวจริงหรือเปล่าคะ? 🥺 พิมพ์ตัวสะกดให้ถูกถ้วนนะคะ (พิมพ์สลับตัวพิมพ์เล็ก/ใหญ่ได้น้า)</span>
+                </motion.div>
+              )}
+
+              <div className="flex gap-3 w-full pt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowVerification(false);
+                    setVerificationAnswer("");
+                    setVerificationError(false);
+                  }}
+                  className="bg-slate-900 hover:bg-slate-850 text-slate-400 hover:text-slate-300 font-bold text-xs sm:text-sm px-4 py-3 sm:py-3.5 rounded-xl border border-slate-800 hover:border-slate-700 transition-colors cursor-pointer inline-flex items-center gap-1.5 justify-center"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>ย้อนกลับ</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleVerifySubmit}
+                  className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 text-white font-black text-xs sm:text-sm px-6 py-3 sm:py-3.5 rounded-xl border border-pink-400/30 shadow-lg shadow-pink-500/20 transition-all cursor-pointer flex-1 inline-flex items-center justify-center gap-1.5 animate-pulse"
+                >
+                  <span>ส่งคำตอบเพื่อยืนยัน 💍</span>
+                </button>
+              </div>
+            </motion.div>
+          )
         ) : (
           <motion.div
             key="success"
@@ -621,7 +751,7 @@ export default function ProposalPanel({ imageUrl }: { imageUrl: string }) {
 
               {/* The Glowing Neon Teleport Button */}
               <motion.a
-                href="https://bluetccth.github.io/ICE-KAO-ORBIT/"
+                href="https://stars.chromeexperiments.com/"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
