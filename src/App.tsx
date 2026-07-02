@@ -6,7 +6,6 @@ import AiOracle from "./components/AiOracle";
 import ProposalPanel from "./components/ProposalPanel";
 import ProfileComparison from "./components/ProfileComparison";
 import PasscodeGate from "./components/PasscodeGate";
-import AiGate from "./components/AiGate";
 import { cuteSynth } from "./utils/audio";
 
 // Import the beautifully generated cozy rain comfort illustration
@@ -35,9 +34,6 @@ interface StarData {
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return sessionStorage.getItem("is_ice_authenticated") === "true";
-  });
-  const [isAiUnlocked, setIsAiUnlocked] = useState(() => {
-    return sessionStorage.getItem("is_ai_unlocked") === "true";
   });
   const [raindrops, setRaindrops] = useState<RaindropData[]>([]);
   const [stars, setStars] = useState<StarData[]>([]);
@@ -313,16 +309,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
             >
-              {isAiUnlocked ? (
-                <AiOracle />
-              ) : (
-                <AiGate
-                  onUnlock={() => {
-                    setIsAiUnlocked(true);
-                    sessionStorage.setItem("is_ai_unlocked", "true");
-                  }}
-                />
-              )}
+              <AiOracle />
             </motion.div>
           )}
 
