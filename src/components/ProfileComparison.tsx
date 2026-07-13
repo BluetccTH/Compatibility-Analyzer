@@ -19,6 +19,17 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
+function calculateAge(birthDateStr: string): number {
+  const today = new Date();
+  const birthDate = new Date(birthDateStr);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+}
+
 export default function ProfileComparison() {
   const [activeSection, setActiveSection] = useState<"intro" | "food" | "hobbies" | "personality">("intro");
 
@@ -26,7 +37,7 @@ export default function ProfileComparison() {
   const kaoInfo = {
     nickname: "ก้าว (Kao) 🔭",
     fullName: "ชิษณุพงศ์ เรณูหอม",
-    age: "17 ปี",
+    age: `${calculateAge("2009-04-03")} ปี`,
     mbti: "INTJ",
     birthday: "วันศุกร์ที่ 3 เมษายน ค.ศ. 2009 (2552)",
     province: "ปทุมธานี (ภาคกลาง)",
@@ -43,7 +54,7 @@ export default function ProfileComparison() {
   const iceInfo = {
     nickname: "ไอซ์ (Ice) 🧊",
     fullName: "อาริตา ราชนาวี",
-    age: "18 ปี",
+    age: `${calculateAge("2007-10-06")} ปี`,
     mbti: "INFP",
     birthday: "วันเสาร์ที่ 6 ตุลาคม ค.ศ. 2007 (2550)",
     province: "อุบลราชธานี (ภาคอีสาน)",
